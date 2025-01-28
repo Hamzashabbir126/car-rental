@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>User Login</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://answerdone.com/static/assets/css/user/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+
+<body>
+  <header></header>
+  <main>
+    <div class="wrapper">
+      <div class="text-center mt-4 name">
+        Login
+      </div>
+
+      <form id="loginForm" class="p-3 mt-3">
+        <div class="form-field d-flex align-items-center">
+          <span class="far fa-user"></span>
+          <input type="text" name="email" id="email" placeholder="Email" required>
+        </div>
+        <div class="form-field d-flex align-items-center">
+          <span class="fas fa-key"></span>
+          <input type="password" name="password" id="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn mt-3">Login</button>
+        <div id="errorMsg" class="text-danger mt-2"></div>
+      </form>
+    </div>
+  </main>
+  <footer></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+  
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+  
+      try {
+        // Fetch data for user with ID 1
+        const response = await fetch('https://6783e5ee8b6c7a1316f6010e.mockapi.io/api/v1/users/1');
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data. Please try again.');
+        }
+  
+        const user = await response.json();
+  
+        // Validate form data against fetched user data
+        if (user.email === email && user.password === password) {
+          console.log('Login successful:', user);
+          
+          // Save session data
+          sessionStorage.setItem('isLoggedIn', 'true');
+          sessionStorage.setItem('user', JSON.stringify(user));
+          
+          window.location.href = 'dashboard.html'; // Redirect to dashboard on success
+        } else {
+          errorMsg.textContent = 'Invalid email or password.';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        errorMsg.textContent = error.message || 'An error occurred. Please try again.';
+      }
+    });
+  </script>
+  
+</body>
+
+</html>
